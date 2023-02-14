@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.orm import Session
 
 from api.schemas import schemas
@@ -11,7 +11,6 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
-# Dependency
 def get_db():
     db = SessionLocal()
     try:
@@ -42,14 +41,22 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
-@app.post("/users/{user_id}/items/", response_model=schemas.Item)
+@app.post("/users/{user_id}/items/", response_model=schemas.TaskCreate)
 def create_item_for_user(
-        user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
+        user_id: int, item: schemas.TaskCreate, db: Session = Depends(get_db)
 ):
-    return crud.create_user_item(db=db, item=item, user_id=user_id)
+    return crud.create_user_tasks(db=db, item=item, user_id=user_id)
 
 
-@app.get("/items/", response_model=list[schemas.Item])
+@app.get("/items/", response_model=list[schemas.TaskCreate])
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    items = crud.get_items(db, skip=skip, limit=limit)
+    items = crud.get_tasks(db, skip=skip, limit=limit)
     return items
+
+
+@app.get("/echo")
+def echo(request: Request):
+    print(request)
+    print(request.headers)
+    print(request.query_params)
+    return request.query_params

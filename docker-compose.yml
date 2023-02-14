@@ -8,8 +8,12 @@ services:
       - 8000
     ports:
       - "8000:8000"
+    volumes:
+      - .:/code
   bot:
     build: .
     command: python bot.py
     env_file: dev.env
     restart: always
+    volumes:
+      - .:/code

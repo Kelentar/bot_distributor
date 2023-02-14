@@ -1,35 +1,33 @@
 from pydantic import BaseModel
 
 
-class ItemBase(BaseModel):
-    title: str
-    description: str | None = None
+class TaskCreate(BaseModel):
+    user_id: int
+    subject_id: int
+    subject_type: str
+    status: str
+    details: str
 
 
-class ItemCreate(ItemBase):
-    pass
-
-
-class Item(ItemBase):
+class TaskUpdate(TaskCreate):
     id: int
-    owner_id: int
-
-    class Config:
-        orm_mode = True
 
 
-class UserBase(BaseModel):
+class UserCreate(BaseModel):
     email: str
+    token: str
 
 
-class UserCreate(UserBase):
-    password: str
-
-
-class User(UserBase):
+class User(UserCreate):
     id: int
-    is_active: bool
-    items: list[Item] = []
 
     class Config:
         orm_mode = True
+
+
+class Token(BaseModel):
+    token: str
+
+
+# class json_load():
+#     json.loads(s, *, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, **kw)
