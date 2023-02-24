@@ -26,4 +26,5 @@ typing_extensions==4.4.0
 uvicorn==0.20.0
 yarl==1.8.2
 requests
+aiogram_inline_paginations
 python-dotenv

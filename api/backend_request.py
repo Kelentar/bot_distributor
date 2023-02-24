@@ -1,15 +1,24 @@
 import requests
 
-
-def post_log(Form):
-    result = requests.post("https://devapi-v2.assist.systems/systems/auth/login",
-                           headers={'accept': 'application/json',
-                       'Content-Type': 'application/json'},
-                           json={'email': Form['email'], 'password': Form['password']})
-    return result.content
+from data.config import settings
 
 
-def get_task():
-    identify = requests.get("https://devapi-v2.assist.systems/systems/task/980",
-                            headers={'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoyOCwic2Vzc2lvbklkIjoiM2Q0NzZhM2QtMDY5MC00MzlkLTg4NTQtOTMxNjVhMGRjMTBiIiwiaWF0IjoxNjc2MzIzOTAzfQ.-AN0ELTn3b7CuuNHLjJkMGfittKtszILv1KrcZ4CIq8'})
-    return identify.content
+def get_task(user_id: int, status="work"):
+    authorization = requests.get(f'{settings.DEVAPI_ROOT}{settings.TASK_ROOT}',
+                                 headers={'x-app-auth': f'{settings.ASSIST_TOKEN}'},
+                                 params={'admin_id': user_id, 'limit': 500, 'status': status})
+    return authorization
+
+
+def get_admin_id(telegram_id: int):
+    authorization = requests.get(f'{settings.DEVAPI_ROOT}{settings.ADMIN_ROOT}',
+                                 headers={'x-app-auth': f'{settings.ASSIST_TOKEN}'},
+                                 params={'telegram_id': telegram_id, 'is_active': 'true', 'is_verified': 'true'})
+    return authorization
+
+
+def client_request(id: int, telegram_id: int, code: str):
+    identify = requests.put(f'{settings.DEVAPI_ROOT}{settings.ADMIN_ROOT}/{id}/telegram',
+                            headers={'x-app-auth': f'{settings.ASSIST_TOKEN}'},
+                            json={'telegram_id': telegram_id, 'code': code})
+    return identify

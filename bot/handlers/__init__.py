@@ -1,2 +1,2 @@
 from .start import bot_start
-from .start import make_request
+from .user_request import items_index

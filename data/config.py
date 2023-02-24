@@ -7,9 +7,16 @@ class Settings(BaseSettings):
     TOKEN: str
     POSTGRES_HOST: str
     POSTGRES_PORT: str = '5432'
+    POSTGRES_DB: str
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
+    DEVAPI_ROOT: str
+    ADMIN_ROOT: str
+    TASK_ROOT: str
+    ASSISTANT_ROOT: str
+    CHAT_ROOT: str
+    SUPERUSER_CHAT: str
+    ASSIST_TOKEN: str
     SQLALCHEMY_DATABASE_URL: Optional[PostgresDsn] = None
 
     @validator("SQLALCHEMY_DATABASE_URL", pre=True)
